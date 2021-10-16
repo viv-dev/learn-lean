@@ -1,0 +1,136 @@
+@use "theme" as lean-theme;
+@use "~@angular/material" as mat;
+
+:host {
+  width: 100%;
+}
+
+table {
+  width: 100%;
+}
+
+h1 {
+  margin: 0;
+}
+
+$filled-color: mat.get-color-from-palette(lean-theme.$learn-lean-accent);
+.player_status {
+  width: 20px;
+  height: 20px;
+  border: 1px solid grey;
+  border-radius: 50%;
+
+  &.filled {
+    border: none;
+    background-color: $filled-color;
+  }
+}
+
+.mat-table {
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.mat-column-players {
+  width: 150px;
+}
+
+.mat-column-actions {
+  width: 150px;
+}
+
+.mat-row {
+  &:last-of-type td:last-of-type {
+    .mat-cell {
+      border: none;
+    }
+  }
+}
+
+@media (max-width: 959px) {
+  .mat-column-players {
+    width: 100%;
+  }
+
+  .mat-column-actions {
+    width: 100%;
+  }
+
+  .mat-table[matTableResponsive] {
+    .mat-header-row {
+      display: flex;
+      flex-wrap: wrap;
+      height: auto;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+
+      th.mat-header-cell {
+        display: flex;
+        flex: 1;
+        align-items: center;
+        padding: 1rem 0.5rem;
+        justify-content: space-around;
+
+        & > .mat-sort-header-container {
+          padding-left: 15px; // padding is used to center the header table cells, due to the width of the sort icon
+        }
+
+        &:not([mat-sort-header]),
+        &.mat-sort-header-disabled,
+        &.mat-column-actions {
+          display: none;
+        }
+      }
+    }
+
+    $cell-padding: 1rem;
+    .mat-row {
+      height: auto;
+
+      td.mat-cell:not(.mat-column-actions),
+      td.mat-cell:not(.mat-column-players) {
+        display: grid;
+        grid-template-columns: 50% 50%;
+        padding: $cell-padding;
+        text-align: right;
+        word-break: break-word;
+
+        & > * {
+          grid-column: 2;
+        }
+
+        &:before {
+          content: attr(data-column-name);
+          text-align: left;
+          font-weight: 700;
+        }
+      }
+
+      td.mat-column-actions {
+        display: flex;
+        justify-content: end;
+        padding: $cell-padding;
+
+        & > button {
+          margin: 0.5rem 0;
+        }
+      }
+
+      &:last-of-type td:last-of-type {
+        border: none;
+      }
+
+      &:not(:last-of-type) td:last-of-type {
+        border-bottom: 0.5rem solid #fafafa;
+      }
+    }
+  }
+
+  .mat-card,
+  .mat-expansion-panel {
+    .mat-table[matTableResponsive] {
+      border: 0.5rem solid #fafafa;
+    }
+  }
+}

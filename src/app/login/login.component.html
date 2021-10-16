@@ -1,1 +1,64 @@
-<p>login works!</p>
+<ng-template #loader>
+  <div fxLayout="column" fxLayoutAlign="center center" style="height: 100%">
+    <mat-spinner></mat-spinner>
+  </div>
+</ng-template>
+
+<mat-card
+  *ngIf="authStatusResolved && showLogin; else loader"
+  class="login_form"
+  fxLayout="column"
+  fxLayoutGap="30px"
+>
+  <mat-card-title>Login</mat-card-title>
+  <mat-card-content fxLayout="column" fxLayoutGap="20px">
+    <mat-error
+      *ngIf="this.loginAttempted && !this.loginSuccess && !this.loggingIn"
+      class="error"
+    >
+      Username or password is incorrect
+    </mat-error>
+    <form
+      [formGroup]="form"
+      (ngSubmit)="submit()"
+      fxLayout="column"
+      fxLayoutGap="30px"
+    >
+      <mat-form-field>
+        <mat-label>Username</mat-label>
+        <input
+          type="text"
+          matInput
+          placeholder="Username"
+          formControlName="username"
+        />
+        <mat-error *ngIf="this.username!.hasError('email')"
+          >Must be valid email address</mat-error
+        >
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Password</mat-label>
+        <input
+          type="password"
+          matInput
+          placeholder="Password"
+          formControlName="password"
+        />
+      </mat-form-field>
+
+      <div class="button" fxLayout="row" fxLayoutAlign="end">
+        <button
+          mat-raised-button
+          color="accent"
+          type="submit"
+          [disabled]="loggingIn || form.invalid"
+        >
+          Login
+        </button>
+      </div>
+    </form>
+
+    <mat-progress-bar *ngIf="loggingIn" mode="query"></mat-progress-bar>
+  </mat-card-content>
+</mat-card>

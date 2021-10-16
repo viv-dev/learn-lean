@@ -1,0 +1,20 @@
+:host {
+  width: 100vw;
+  height: 100vh;
+}
+
+.login_form {
+  position: absolute;
+  top: 200px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 600px;
+  padding: 40px;
+}
+
+mat-progress-bar {
+  position: absolute;
+  top: 100%;
+  left: 0;
+}

@@ -1,1 +1,71 @@
-<p>home works!</p>
+<div fxLayout="column" fxLayoutGap="20px">
+  <div fxLayout="row" fxLayoutAlign="center center">
+    <h1>Scenarios</h1>
+    <div fxFlex="1 1 auto"></div>
+    <button mat-raised-button color="accent" type="button">Add New</button>
+  </div>
+  <div *ngIf="$scenarios | async as scenarios">
+    <table
+      mat-table
+      matTableResponsive
+      [dataSource]="scenarios"
+      class="mat-elevation-z8 demo-table"
+    >
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef>Scenario Type</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.type | pipelineScenarioTypeMap }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.state | pipelineScenarioStateMap }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="players">
+        <th mat-header-cell *matHeaderCellDef>Players</th>
+        <td mat-cell *matCellDef="let element">
+          <div
+            fxLayout="row"
+            fxLayoutGap="5px"
+            fxLayoutAlign="start center"
+            fxLayoutAlign.lt-md="end center"
+          >
+            <div
+              class="player_status"
+              [class.filled]="!!element.player1_id"
+            ></div>
+            <div
+              class="player_status"
+              [class.filled]="!!element.player2_id"
+            ></div>
+            <div
+              class="player_status"
+              [class.filled]="!!element.player2_id"
+            ></div>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef>
+          <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="5px">
+            <button mat-stroked-button color="primary">Join</button>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </div>
+</div>

@@ -1,31 +1,61 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, CanDeactivate, CanLoad, Route, RouterStateSnapshot, UrlSegment, UrlTree } from '@angular/router';
+import {
+  ActivatedRouteSnapshot,
+  CanActivate,
+  CanActivateChild,
+  CanDeactivate,
+  CanLoad,
+  Route,
+  Router,
+  RouterStateSnapshot,
+  UrlSegment,
+  UrlTree,
+} from '@angular/router';
 import { Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
+import { AuthService } from '../services/auth.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-export class AuthGuard implements CanActivate, CanActivateChild, CanDeactivate<unknown>, CanLoad {
+export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
+  constructor(private authService: AuthService, private router: Router) {}
   canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return true;
+    next: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ):
+    | Observable<boolean | UrlTree>
+    | Promise<boolean | UrlTree>
+    | boolean
+    | UrlTree {
+    return this.processAuthState();
   }
   canActivateChild(
-    childRoute: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return true;
-  }
-  canDeactivate(
-    component: unknown,
-    currentRoute: ActivatedRouteSnapshot,
-    currentState: RouterStateSnapshot,
-    nextState?: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return true;
+    next: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ):
+    | Observable<boolean | UrlTree>
+    | Promise<boolean | UrlTree>
+    | boolean
+    | UrlTree {
+    return this.processAuthState();
   }
   canLoad(
     route: Route,
-    segments: UrlSegment[]): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return true;
+    segments: UrlSegment[]
+  ): Observable<boolean> | Promise<boolean> | boolean {
+    return this.processAuthState();
+  }
+
+  private async processAuthState(): Promise<boolean> {
+    const loggedIn = await this.authService
+      .isAuthenticated()
+      .pipe(take(1))
+      .toPromise();
+
+    if (!loggedIn) {
+      this.router.navigate(['/login']);
+    }
+    return loggedIn;
   }
 }

@@ -1,6 +1,13 @@
 @use "theme" as lean-theme;
 @use "~@angular/material" as mat;
 
+$content_max_width: 1440px;
+
+.mat-toolbar {
+  position: relative;
+  padding: 0px 40px;
+}
+
 .app_container {
   height: 100%;
 }
@@ -23,7 +30,7 @@
 
 .hover_accent {
   &:hover {
-    color: mat.get-color-from-palette(lean-theme.$learn-lean-primary, A100);
+    color: mat.get-color-from-palette(lean-theme.$learn-lean-accent, A100);
   }
 }
 
@@ -37,17 +44,20 @@
 }
 
 mat-sidenav {
-  width: 200px;
+  width: 400px;
   padding-bottom: 20px;
 }
 
-main {
-  height: 100%;
+header {
+  width: 100%;
+  max-width: $content_max_width;
 }
 
 .content_container {
-  padding: 50px;
+  padding: 50px 0px;
   width: 100%;
+  max-width: $content_max_width;
+  margin: 0 auto;
 
   @media screen and (max-width: 959px) {
     padding: 30px;
@@ -55,35 +65,7 @@ main {
 }
 
 .logout_icon {
-  padding: 10px 15px;
+  // padding: 10px 15px;
+  height: 100%;
   cursor: pointer;
-}
-
-.list_list_label {
-  box-sizing: border-box;
-  width: 90%;
-  padding: 5px;
-  text-align: center;
-}
-
-.sidebar_links {
-  width: 100%;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 10px 0px;
-}
-
-.sidebar_link {
-  width: 100%;
-  padding: 7px 30px;
-  &:hover {
-    background: rgba(255, 255, 255, 0.2);
-  }
-}
-
-.list_link {
-  padding: 3px 30px;
-  width: 100%;
-  &:hover {
-    background: rgba(255, 255, 255, 0.2);
-  }
 }

@@ -14,7 +14,7 @@ const routes: Routes = [
   },
   {
     path: 'login',
-    component: AppShellComponent,
+    component: LoginComponent,
   },
   {
     path: 'app',

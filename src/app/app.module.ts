@@ -23,6 +23,9 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTableModule } from '@angular/material/table';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
 
 // Font Awesome
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -37,6 +40,12 @@ import { HomeComponent } from './pages/home/home.component';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
+import { HttpClientModule } from '@angular/common/http';
+import { NewPipelineScenarioComponent } from './modals/new-pipeline-scenario/new-pipeline-scenario.component';
+import { MatResponsiveTableDirective } from './directives/mat-responsive-table.directive';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
+import { PipelineScenarioTypeMapPipe } from './pipes/pipeline-scenario-type-map.pipe';
+import { PipelineScenarioStateMapPipe } from './pipes/pipeline-scenario-state-map.pipe';
 
 @NgModule({
   declarations: [
@@ -45,6 +54,10 @@ import { NotFoundComponent } from './pages/not-found/not-found.component';
     LoginComponent,
     HomeComponent,
     NotFoundComponent,
+    NewPipelineScenarioComponent,
+    MatResponsiveTableDirective,
+    PipelineScenarioTypeMapPipe,
+    PipelineScenarioStateMapPipe,
   ],
   imports: [
     BrowserModule,
@@ -54,6 +67,7 @@ import { NotFoundComponent } from './pages/not-found/not-found.component';
     provideFirestore(() => getFirestore()),
     provideFunctions(() => getFunctions()),
     BrowserAnimationsModule,
+    HttpClientModule,
     RouterModule,
     ReactiveFormsModule,
     FormsModule,
@@ -66,12 +80,20 @@ import { NotFoundComponent } from './pages/not-found/not-found.component';
     MatTabsModule,
     MatCheckboxModule,
     MatProgressSpinnerModule,
+    MatTableModule,
+    MatDividerModule,
+    MatIconModule,
     FlexLayoutModule,
     FontAwesomeModule,
     OverlayModule,
     PortalModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+      useValue: { appearance: 'fill' },
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

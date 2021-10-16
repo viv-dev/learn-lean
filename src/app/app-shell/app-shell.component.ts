@@ -10,6 +10,7 @@ import {
   faHome,
 } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
+import { distinctUntilChanged } from 'rxjs/operators';
 import { AuthService } from '../core/services/auth.service';
 
 @Component({
@@ -27,7 +28,7 @@ export class AppShellComponent implements OnInit {
   faHome = faHome;
 
   // Variables for handling sidebar state
-  mode = 'side';
+  isMobile = true;
   opened = true;
 
   // Media subscription to change the sidebar mode on mobile view
@@ -35,21 +36,32 @@ export class AppShellComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private mediaObserver: MediaObserver,
-    private router: Router
+    private mediaObserver: MediaObserver
   ) {
+    // Helper for parsing breakpoint aliases
+    const getAlias = (MediaChange: MediaChange[]) => {
+      return MediaChange[0].mqAlias;
+    };
+
     // Subscribe to media breakpoints
-    this.mediaSubscription$ = this.mediaObserver.media$.subscribe(
-      (change: MediaChange) => {
-        if (change.mqAlias === 'sm' || change.mqAlias === 'xs') {
-          this.mode = 'over';
-          this.opened = false;
-        } else {
-          this.mode = 'side';
-          this.opened = true;
-        }
-      }
-    );
+    this.mediaSubscription$ = this.mediaObserver
+      .asObservable()
+      .pipe(
+        distinctUntilChanged(
+          (x: MediaChange[], y: MediaChange[]) => getAlias(x) === getAlias(y)
+        )
+      )
+      .subscribe((changes: MediaChange[]) => {
+        changes.forEach((change) => {
+          if (change.mqAlias === 'lt-md') {
+            this.isMobile = true;
+            this.opened = false;
+          } else {
+            this.isMobile = false;
+            this.opened = true;
+          }
+        });
+      });
   }
 
   ngOnInit() {}
@@ -59,11 +71,11 @@ export class AppShellComponent implements OnInit {
   }
 
   logout() {
-    // this.authService.logout();
+    this.authService.logout();
   }
 
   closeIfMobile() {
-    if (this.mode === 'over') {
+    if (this.isMobile) {
       this.opened = false;
     }
   }
