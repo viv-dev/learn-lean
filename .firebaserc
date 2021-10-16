@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "learn-lean": {
+      "hosting": {
+        "learn-lean": [
+          "learn-lean"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "learn-lean"
+  }
+}
