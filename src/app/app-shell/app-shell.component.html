@@ -1,0 +1,71 @@
+<div class="app_container" fxLayout="column">
+  <!-- Header>-->
+  <mat-toolbar color="primary" fxLayout="row">
+    <div class="menu_checkbox hover_accent">
+      <fa-icon [icon]="faBars"></fa-icon>
+      <label for="menu"></label>
+      <input id="menu" [(ngModel)]="opened" type="checkbox" />
+    </div>
+    <div
+      style="height: 100%"
+      fxFlex="1 1 0"
+      fxLayout="row"
+      fxLayoutAlign="center"
+    ></div>
+
+    <button class="logout_icon hover_accent" type="button" (click)="logout()">
+      <fa-icon [icon]="faSignOutAlt"></fa-icon>
+    </button>
+  </mat-toolbar>
+
+  <!-- Main Content -->
+  <mat-sidenav-container class="sidenav_container" fxLayout="row">
+    <!-- Side Nav -->
+    <mat-sidenav #sidenav mode="side" [(opened)]="opened">
+      <div
+        fxLayout="column"
+        fxLayoutAlign="start center"
+        fxLayoutGap="10px"
+        style="height: 100%"
+      >
+        <!-- Links-->
+        <div
+          class="sidebar_links"
+          fxLayout="column"
+          fxLayoutAlign="start center"
+          style="width: 100%"
+        >
+          <a
+            class="sidebar_link hover_accent"
+            routerLink="/app"
+            fxLayout="row"
+            fxLayoutAlign="center center"
+            fxLayoutGap="10px"
+            (click)="closeIfMobile()"
+          >
+            <fa-icon [icon]="faHome"></fa-icon>
+            <span>Home</span>
+          </a>
+          <!-- <a
+            class="sidebar_link hover_accent"
+            routerLink="/app/settings"
+            fxLayout="row"
+            fxLayoutAlign="start center"
+            fxLayoutGap="10px"
+            (click)="closeIfMobile()"
+          >
+            <fa-icon [icon]="faCog"></fa-icon>
+            <span>Account</span>
+          </a> -->
+        </div>
+      </div>
+    </mat-sidenav>
+
+    <!-- Page -->
+    <mat-sidenav-content class="content_container">
+      <main>
+        <router-outlet></router-outlet>
+      </main>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

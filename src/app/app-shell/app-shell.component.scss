@@ -1,0 +1,89 @@
+@use "theme" as lean-theme;
+@use "~@angular/material" as mat;
+
+.app_container {
+  height: 100%;
+}
+
+.menu_checkbox {
+  position: relative;
+  label {
+    display: block;
+    position: absolute;
+    width: 47.5px;
+    height: 45px;
+    left: 0;
+    top: -5px;
+    cursor: pointer;
+  }
+  input[type="checkbox"] {
+    visibility: hidden;
+  }
+}
+
+.hover_accent {
+  &:hover {
+    color: mat.get-color-from-palette(lean-theme.$learn-lean-primary, A100);
+  }
+}
+
+.home_link {
+  height: 100%;
+  padding: 0px 20px;
+}
+
+.sidenav_container {
+  height: 100%;
+}
+
+mat-sidenav {
+  width: 200px;
+  padding-bottom: 20px;
+}
+
+main {
+  height: 100%;
+}
+
+.content_container {
+  padding: 50px;
+  width: 100%;
+
+  @media screen and (max-width: 959px) {
+    padding: 30px;
+  }
+}
+
+.logout_icon {
+  padding: 10px 15px;
+  cursor: pointer;
+}
+
+.list_list_label {
+  box-sizing: border-box;
+  width: 90%;
+  padding: 5px;
+  text-align: center;
+}
+
+.sidebar_links {
+  width: 100%;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 10px 0px;
+}
+
+.sidebar_link {
+  width: 100%;
+  padding: 7px 30px;
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+}
+
+.list_link {
+  padding: 3px 30px;
+  width: 100%;
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+}
