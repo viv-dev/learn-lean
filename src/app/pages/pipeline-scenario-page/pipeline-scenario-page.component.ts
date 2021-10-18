@@ -2,7 +2,6 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
-  HostBinding,
   HostListener,
   OnInit,
   ViewChild,
@@ -13,6 +12,7 @@ import {
   drawCircle,
   drawRectangle,
   getCanvasMousePos,
+  notValidShape,
   Rectangle,
   Shape,
 } from 'src/app/core/utils/canvas-shapes';
@@ -22,17 +22,23 @@ const LETTERS: string[] = Array.from('abcdefghijklmnopqrstuvwxyz');
 const NUMBERS: string[] = [...Array(10).keys()].map((num) =>
   (num + 1).toString()
 );
+
 class Token extends Circle {
   text: string = '';
-  jitterX: number = 0;
-  jitterY: number = 0;
+}
+
+interface TokenData {
+  text: string;
+  jitterX: number;
+  jitterY: number;
 }
 
 const SLOT_RADIUS = 60;
-const SLOT_GAP = 20;
+const SLOT_GAP = 30;
 const TOKEN_RADIUS = 40;
 const TOKEN_GAP = 50;
-const PADDING = 100;
+const PADDING = 10;
+const MAX_WIDTH = 1000;
 const Y_OFFSET = SLOT_RADIUS * 2 + SLOT_GAP * 4;
 const JITTER_RANGE = Math.floor(TOKEN_GAP / 2);
 
@@ -47,21 +53,27 @@ export class PipelineScenarioPageComponent implements OnInit, AfterViewInit {
 
   private canvas?: HTMLCanvasElement;
 
-  private ctx?: CanvasRenderingContext2D | null;
+  private ctx?: CanvasRenderingContext2D | null = null;
 
   private shapes: Shape[] = [];
 
   private dragging = false;
 
-  private draggingShape?: Shape | null;
+  private draggingShape?: Shape | null = null;
 
-  private tokens: any[] = [];
+  private draggingOriginalPos?: { x: number; y: number } | null = null;
 
-  private slotToken = new Circle();
+  private tokenDatum: TokenData[] = [];
+
+  private tokenOrder: string[] = [];
+
+  private tokenSlot = new Circle();
 
   private colNum = 0;
 
   private rowNum = 0;
+
+  private xOffset = 0;
 
   constructor(private hostElement: ElementRef<HTMLElement>) {
     this.initTokens();
@@ -78,12 +90,14 @@ export class PipelineScenarioPageComponent implements OnInit, AfterViewInit {
   }
 
   initTokens() {
-    this.tokens = [...NUMBERS, ...LETTERS].map((token) => ({
+    this.tokenDatum = [...NUMBERS, ...LETTERS].map((token) => ({
       text: token,
       jitterX: this.randomFromInterval(-JITTER_RANGE, JITTER_RANGE),
       jitterY: this.randomFromInterval(-JITTER_RANGE, JITTER_RANGE),
     }));
-    this.shuffle(this.tokens);
+    this.tokenOrder = [...NUMBERS, ...LETTERS];
+    this.shuffle(this.tokenDatum); // shuffle the order to draw the tokens
+    this.shuffle(this.tokenOrder);
   }
 
   shuffle(array: any[]) {
@@ -101,17 +115,23 @@ export class PipelineScenarioPageComponent implements OnInit, AfterViewInit {
 
   calcCanvasSize() {
     if (!this.canvas) return;
-    const canvasWidth = this.hostElement.nativeElement.clientWidth;
-
     // Set the canvas width
-    this.canvas.width = canvasWidth;
+    this.canvas.width = this.hostElement.nativeElement.clientWidth;
+
+    // Make the canvas width match that of the host element
+    const drawWidth =
+      (this.canvas.width >= MAX_WIDTH ? MAX_WIDTH : this.canvas.width) -
+      PADDING * 2;
+
+    this.xOffset = (this.canvas.width - drawWidth) / 2 + TOKEN_RADIUS;
 
     // Calculate the number of possible columns based on token size
-    this.colNum = Math.floor(
-      (canvasWidth - PADDING) / (TOKEN_RADIUS * 2 + TOKEN_GAP)
-    );
-    this.rowNum = Math.ceil(this.tokens.length / this.colNum);
+    this.colNum = Math.floor(drawWidth / (TOKEN_RADIUS * 2 + TOKEN_GAP));
 
+    // Calculate the number of rows based on the number of columnts and tokens
+    this.rowNum = Math.ceil(this.tokenDatum.length / this.colNum);
+
+    // Determine the height of the canvas required to fit everything
     this.canvas.height =
       Y_OFFSET + (TOKEN_RADIUS * 2 + TOKEN_GAP) * this.rowNum;
   }
@@ -120,37 +140,40 @@ export class PipelineScenarioPageComponent implements OnInit, AfterViewInit {
     // Clear shapes
     this.shapes = [];
 
-    for (let i = 0; i < this.tokens.length; i++) {
-      const token = this.tokens[i];
-      const tok = new Token();
+    for (let i = 0; i < this.tokenDatum.length; i++) {
+      const tokenData = this.tokenDatum[i];
+      const token = new Token();
       const row = Math.floor(i / this.colNum);
       const col = i % this.colNum;
 
-      tok.radius = TOKEN_RADIUS;
-      tok.fillColor = 'purple';
-      tok.draggable = true;
-      tok.text = token.text;
+      token.radius = TOKEN_RADIUS;
+      token.fillColor = '#455A64';
+      token.strokeWidth = 8;
+      token.strokeColor = '#37474F';
 
-      tok.x =
-        PADDING +
+      token.draggable = true;
+      token.text = tokenData.text;
+
+      token.x =
+        this.xOffset +
         col * (TOKEN_RADIUS * 2 + TOKEN_GAP) +
         TOKEN_RADIUS +
-        token.jitterX;
-      tok.y =
+        tokenData.jitterX;
+      token.y =
         Y_OFFSET +
         row * (TOKEN_RADIUS * 2 + TOKEN_GAP) +
         TOKEN_RADIUS / 2 +
-        token.jitterY;
+        tokenData.jitterY;
 
-      this.shapes.push(tok);
+      this.shapes.push(token);
     }
   }
 
   calculateSlot() {
     if (!this.canvas) return;
-    this.slotToken.x = this.canvas.width / 2;
-    this.slotToken.y = SLOT_GAP + SLOT_RADIUS;
-    this.slotToken.radius = SLOT_RADIUS;
+    this.tokenSlot.x = this.canvas.width / 2;
+    this.tokenSlot.y = SLOT_GAP + SLOT_RADIUS;
+    this.tokenSlot.radius = SLOT_RADIUS;
   }
 
   draw() {
@@ -159,16 +182,15 @@ export class PipelineScenarioPageComponent implements OnInit, AfterViewInit {
     // clear the canvas
     clearCanvas(this.canvas!);
 
-    drawCircle(this.ctx!, this.slotToken);
+    drawCircle(this.ctx!, this.tokenSlot);
 
     this.shapes.forEach((shape) => {
       if (shape instanceof Rectangle) {
         drawRectangle(this.ctx!, shape);
       }
-      if (shape instanceof Circle) {
+      if (shape instanceof Circle && !(shape instanceof Token)) {
         drawCircle(this.ctx!, shape);
-      }
-      if (shape instanceof Token) {
+      } else if (shape instanceof Token) {
         this.drawToken(this.ctx!, shape);
       }
     });
@@ -179,13 +201,40 @@ export class PipelineScenarioPageComponent implements OnInit, AfterViewInit {
   }
 
   drawToken(ctx: CanvasRenderingContext2D, token: Token) {
+    if (notValidShape(token)) return;
+
+    if (token.fill) {
+      ctx.beginPath();
+      ctx.arc(token.x, token.y, token.radius, 0, Math.PI * 2);
+      if (this.tokenOrder[0] === token.text) {
+        ctx.fillStyle = 'green';
+      } else {
+        ctx.fillStyle = token.fillColor;
+      }
+      ctx.fill();
+    }
+
+    if (token.strokeWidth > 0) {
+      ctx.lineWidth = token.strokeWidth > 0 ? token.strokeWidth : 1;
+      ctx.strokeStyle = token.strokeColor;
+      ctx.stroke();
+    }
+
     const fontSize = 32;
     ctx.font = `${fontSize}px sans`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillStyle = 'black';
     ctx.fillText(token.text, token.x, token.y);
-    // ctx.fill();
+  }
+
+  circlesOverlap(a: Circle, b: Circle) {
+    const dX = a.x - b.x;
+    const dY = a.y - b.y;
+    const distance = Math.sqrt(dX * dX + dY * dY);
+    const minDistance = a.radius + b.radius;
+    if (distance < minDistance) return true;
+    return false;
   }
 
   @HostListener('document:mousemove', ['$event'])
@@ -210,8 +259,27 @@ export class PipelineScenarioPageComponent implements OnInit, AfterViewInit {
   @HostListener('document:mouseup', ['$event'])
   onMouseUp(e: MouseEvent) {
     if (!this.dragging) return;
+
+    let correctTokenSlotted = false;
+    if (
+      this.draggingShape instanceof Token &&
+      this.draggingShape.text === this.tokenOrder[0]
+    ) {
+      if (this.circlesOverlap(this.tokenSlot, this.draggingShape)) {
+        correctTokenSlotted = true;
+        this.draggingShape.disabled = true;
+        this.tokenOrder.shift();
+      }
+    }
+
+    if (!correctTokenSlotted) {
+      this.draggingShape!.x = this.draggingOriginalPos!.x;
+      this.draggingShape!.y = this.draggingOriginalPos!.y;
+    }
     this.dragging = false;
     this.draggingShape = null;
+    this.draggingOriginalPos = null;
+    this.draw();
   }
 
   @HostListener('document:mousedown', ['$event'])
@@ -220,6 +288,8 @@ export class PipelineScenarioPageComponent implements OnInit, AfterViewInit {
       // Get the shape and check if it's draggable
       const shape = this.shapes[i];
       if (!shape.draggable) continue;
+
+      let selectable = false;
 
       // If it is draggable, udpate it's position according to the mouse and it's type
       const mousePos = getCanvasMousePos(this.canvas!, mouseClick);
@@ -230,10 +300,7 @@ export class PipelineScenarioPageComponent implements OnInit, AfterViewInit {
           mousePos.y >= shape.y &&
           mousePos.y <= shape.y + shape.height
         ) {
-          this.dragging = true;
-          this.draggingShape = shape;
-          console.log(`Selected shape ${i}`);
-          break;
+          selectable = true;
         }
       } else if (shape instanceof Circle) {
         if (
@@ -242,11 +309,15 @@ export class PipelineScenarioPageComponent implements OnInit, AfterViewInit {
           mousePos.y >= shape.y - shape.radius &&
           mousePos.y <= shape.y + shape.radius
         ) {
-          this.dragging = true;
-          this.draggingShape = shape;
-          console.log(`Selected shape ${i}`);
-          break;
+          selectable = true;
         }
+      }
+
+      if (selectable) {
+        this.dragging = true;
+        this.draggingShape = shape;
+        this.draggingOriginalPos = { x: shape.x, y: shape.y };
+        console.log(`Selected shape ${i}`);
       }
     }
   }

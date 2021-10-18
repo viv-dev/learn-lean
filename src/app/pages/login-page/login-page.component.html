@@ -1,15 +1,4 @@
-<ng-template #loader>
-  <div fxLayout="column" fxLayoutAlign="center center" style="height: 100%">
-    <mat-spinner></mat-spinner>
-  </div>
-</ng-template>
-
-<mat-card
-  *ngIf="authStatusResolved && showLogin; else loader"
-  class="login_form"
-  fxLayout="column"
-  fxLayoutGap="30px"
->
+<mat-card class="login_form" fxLayout="column" fxLayoutGap="30px">
   <mat-card-title>Login</mat-card-title>
   <mat-card-content fxLayout="column" fxLayoutGap="20px">
     <mat-error

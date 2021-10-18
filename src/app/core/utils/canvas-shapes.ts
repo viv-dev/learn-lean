@@ -3,18 +3,22 @@ export class Shape {
   y: number = 0;
   fill: boolean = true;
   fillColor: string = 'black';
-  stroke: boolean = false;
   strokeColor: string = 'black';
-  strokeWidth: number = 1;
+  strokeWidth: number = 0;
   draggable: boolean = false;
+  disabled = false;
 }
 
 export class Circle extends Shape {
   radius: number = 1;
 }
 
+export function notValidShape(shape: Shape) {
+  return (!shape.fill && shape.strokeWidth <= 0) || shape.disabled;
+}
+
 export function drawCircle(ctx: CanvasRenderingContext2D, circle: Circle) {
-  if (!circle.fill && !circle.stroke) return;
+  if (notValidShape(circle)) return;
 
   if (circle.fill) {
     ctx.beginPath();
@@ -23,7 +27,7 @@ export function drawCircle(ctx: CanvasRenderingContext2D, circle: Circle) {
     ctx.fill();
   }
 
-  if (circle.stroke) {
+  if (circle.strokeWidth > 0) {
     ctx.lineWidth = circle.strokeWidth > 0 ? circle.strokeWidth : 1;
     ctx.strokeStyle = circle.strokeColor;
     ctx.stroke();
@@ -40,7 +44,7 @@ export function drawRectangle(
   rectangle: Rectangle
 ) {
   // We can't draw a shape if there's no stroke or fill set
-  if (!rectangle.fill && !rectangle.stroke) return;
+  if (notValidShape(rectangle)) return;
 
   // Draw the fill if required
   if (rectangle.fill) {
@@ -49,7 +53,7 @@ export function drawRectangle(
   }
 
   // Draw the stroke if required
-  if (rectangle.stroke) {
+  if (rectangle.strokeWidth > 0) {
     ctx.lineWidth = rectangle.strokeWidth > 0 ? rectangle.strokeWidth : 1;
     ctx.strokeStyle = rectangle.strokeColor;
     ctx.strokeRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);

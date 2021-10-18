@@ -1,1 +1,9 @@
-<router-outlet></router-outlet>
+<ng-template #loader>
+  <div fxLayout="column" fxLayoutAlign="center center" style="height: 100%">
+    <mat-spinner></mat-spinner>
+  </div>
+</ng-template>
+
+<ng-container *ngIf="isAuthInitialised$ | async; else loader">
+  <router-outlet></router-outlet>
+</ng-container>
