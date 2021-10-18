@@ -14,6 +14,7 @@ h1 {
 }
 
 $filled-color: mat.get-color-from-palette(lean-theme.$learn-lean-accent);
+
 .player_status {
   width: 20px;
   height: 20px;
@@ -109,7 +110,7 @@ $filled-color: mat.get-color-from-palette(lean-theme.$learn-lean-accent);
 
       td.mat-column-actions {
         display: flex;
-        justify-content: end;
+        justify-content: flex-end;
         padding: $cell-padding;
 
         & > button {

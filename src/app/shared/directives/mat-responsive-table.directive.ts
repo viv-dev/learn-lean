@@ -30,16 +30,11 @@ export class MatResponsiveTableDirective
     this.tbodyChanged$.next(true)
   );
 
-  constructor(private table: ElementRef, private renderer: Renderer2) {
-    console.log("I'm alive!");
-  }
+  constructor(private table: ElementRef, private renderer: Renderer2) {}
 
   ngOnInit() {
     this.thead = this.table.nativeElement.querySelector('thead');
     this.tbody = this.table.nativeElement.querySelector('tbody');
-
-    console.log(this.thead);
-    console.log(this.tbody);
 
     this.theadObserver.observe(this.thead!, {
       characterData: true,
@@ -63,8 +58,7 @@ export class MatResponsiveTableDirective
           [...headRow!.children].map((headerCell) => headerCell.textContent),
           [...bodyRows].map((row) => [...row.children]),
         ]),
-        takeUntil(this.onDestroy$),
-        tap(console.log)
+        takeUntil(this.onDestroy$)
       )
       .subscribe(([columnNames, rows]) =>
         rows.forEach((rowCells: any[]) =>

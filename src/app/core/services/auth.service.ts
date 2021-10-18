@@ -11,22 +11,29 @@ import {
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { map, take } from 'rxjs/operators';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService implements OnDestroy {
+  // Auth status
   private user$: BehaviorSubject<User | null>;
-  private authStatus$: Subject<boolean>;
+  private authStatus$: BehaviorSubject<boolean>;
+
+  // State of auth initialisation
+  private _isAuthInitialised = false;
+  private isAuthInitialised$ = new BehaviorSubject<boolean>(false);
 
   constructor(private fireAuth: Auth, private router: Router) {
     this.user$ = new BehaviorSubject<User | null>(this.fireAuth.currentUser);
-    this.authStatus$ = new BehaviorSubject<boolean>(
-      !!this.fireAuth.currentUser
-    );
+    this.authStatus$ = new BehaviorSubject<boolean>(false);
 
     this.fireAuth.onAuthStateChanged((user: User | null) => {
+      if (!this._isAuthInitialised) {
+        this._isAuthInitialised = true;
+        this.isAuthInitialised$.next(true);
+      }
       this.user$.next(user);
       this.authStatus$.next(!!user);
     });
@@ -35,6 +42,10 @@ export class AuthService implements OnDestroy {
   ngOnDestroy() {
     this.user$.complete();
     this.authStatus$.complete();
+  }
+
+  isAuthInitialised(): Observable<boolean> {
+    return this.isAuthInitialised$.asObservable();
   }
 
   /**

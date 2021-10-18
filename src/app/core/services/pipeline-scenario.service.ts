@@ -39,7 +39,7 @@ export class PipelineScenarioService {
     const q = query(pipelineCollection, orderBy('created', 'asc'));
 
     // Get the collection according to the query
-    return collectionData<PipelineScenarioInstance>(q);
+    return collectionData<PipelineScenarioInstance>(q, { idField: 'id' });
   }
 
   createOne(scenario: Partial<PipelineScenarioInstance>): void {

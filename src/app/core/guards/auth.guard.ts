@@ -11,8 +11,8 @@ import {
   UrlSegment,
   UrlTree,
 } from '@angular/router';
-import { Observable } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { first, take } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 
 @Injectable({
@@ -20,6 +20,7 @@ import { AuthService } from '../services/auth.service';
 })
 export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
   constructor(private authService: AuthService, private router: Router) {}
+
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
@@ -48,14 +49,24 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
   }
 
   private async processAuthState(): Promise<boolean> {
-    const loggedIn = await this.authService
+    // Wait for the first true value to ensure we get
+    // the correct auth state
+    await this.authService
+      .isAuthInitialised()
+      .pipe(
+        first((v) => v),
+        take(1)
+      )
+      .toPromise();
+
+    const authenticated = await this.authService
       .isAuthenticated()
       .pipe(take(1))
       .toPromise();
 
-    if (!loggedIn) {
+    if (!authenticated) {
       this.router.navigate(['/login']);
     }
-    return loggedIn;
+    return authenticated;
   }
 }

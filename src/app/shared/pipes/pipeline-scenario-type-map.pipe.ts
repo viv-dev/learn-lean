@@ -2,7 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import {
   PipelineScenarioTypeEnum,
   pipelineScenarioTypeLookup,
-} from '../core/models/scenarios.model';
+} from '../../core/models/scenarios.model';
 
 @Pipe({
   name: 'pipelineScenarioTypeMap',

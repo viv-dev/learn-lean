@@ -1,28 +1,30 @@
-<div class="app_container" fxLayout="column">
-  <!-- Header-->
-  <mat-toolbar
-    class="mat-elevation-z4"
-    color="primary"
-    fxLayout="row"
-    fxLayoutAlign="center center"
-  >
-    <header style="width: 100%" fxLayout="row" fxLayoutAlign="start center">
-      <a routerLink="/app"> Learn Lean </a>
-      <div
-        style="height: 100%"
-        fxFlex="1 1 0"
-        fxLayout="row"
-        fxLayoutAlign="center center"
-      ></div>
+<!-- Header-->
+<mat-toolbar
+  class="mat-elevation-z4"
+  color="primary"
+  fxLayout="row"
+  fxLayoutAlign="center center"
+>
+  <header fxLayout="row" fxLayoutAlign="start center">
+    <a routerLink="/app"> Learn Lean </a>
 
-      <button mat-icon-button (click)="logout()">
-        <mat-icon>logout</mat-icon>
-      </button>
-    </header>
-  </mat-toolbar>
+    <!--Spacer -->
+    <div
+      style="height: 100%"
+      fxFlex="1 1 0"
+      fxLayout="row"
+      fxLayoutAlign="center center"
+    ></div>
 
-  <!-- Main Content -->
-  <div class="content_container" fxLayout="column" fxLayoutAlign="start center">
+    <button mat-icon-button (click)="logout()">
+      <mat-icon>logout</mat-icon>
+    </button>
+  </header>
+</mat-toolbar>
+
+<!-- Main Content -->
+<div class="content_outer" fxLayout="column" fxLayoutAlign="start center">
+  <div class="content_inner">
     <router-outlet></router-outlet>
   </div>
 </div>

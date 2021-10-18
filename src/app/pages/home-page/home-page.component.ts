@@ -6,10 +6,10 @@ import { PipelineScenarioService } from 'src/app/core/services/pipeline-scenario
 
 @Component({
   selector: 'll-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss'],
+  templateUrl: './home-page.component.html',
+  styleUrls: ['./home-page.component.scss'],
 })
-export class HomeComponent implements OnInit {
+export class HomePageComponent implements OnInit {
   $scenarios: Observable<PipelineScenarioInstance[]>;
 
   displayedColumns: string[] = ['name', 'type', 'status', 'players', 'actions'];

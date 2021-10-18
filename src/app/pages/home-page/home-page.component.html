@@ -2,7 +2,9 @@
   <div fxLayout="row" fxLayoutAlign="center center">
     <h1>Scenarios</h1>
     <div fxFlex="1 1 auto"></div>
-    <button mat-raised-button color="accent" type="button">Add New</button>
+    <button mat-icon-button>
+      <mat-icon>add</mat-icon>
+    </button>
   </div>
   <div *ngIf="$scenarios | async as scenarios">
     <table
@@ -11,11 +13,13 @@
       [dataSource]="scenarios"
       class="mat-elevation-z8 demo-table"
     >
+      <!-- Name -->
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef>Name</th>
         <td mat-cell *matCellDef="let element">{{ element.name }}</td>
       </ng-container>
 
+      <!-- Scenario Type -->
       <ng-container matColumnDef="type">
         <th mat-header-cell *matHeaderCellDef>Scenario Type</th>
         <td mat-cell *matCellDef="let element">
@@ -23,6 +27,7 @@
         </td>
       </ng-container>
 
+      <!-- Status -->
       <ng-container matColumnDef="status">
         <th mat-header-cell *matHeaderCellDef>Status</th>
         <td mat-cell *matCellDef="let element">
@@ -30,6 +35,7 @@
         </td>
       </ng-container>
 
+      <!-- Players -->
       <ng-container matColumnDef="players">
         <th mat-header-cell *matHeaderCellDef>Players</th>
         <td mat-cell *matCellDef="let element">
@@ -55,11 +61,18 @@
         </td>
       </ng-container>
 
+      <!-- Actions -->
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef>Actions</th>
-        <td mat-cell *matCellDef>
+        <td mat-cell *matCellDef="let element">
           <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="5px">
-            <button mat-stroked-button color="primary">Join</button>
+            <a
+              mat-stroked-button
+              color="primary"
+              [routerLink]="['pipeline/', element.id]"
+            >
+              Join
+            </a>
           </div>
         </td>
       </ng-container>

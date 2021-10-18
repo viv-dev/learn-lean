@@ -3,15 +3,22 @@
 
 $content_max_width: 1440px;
 
-.mat-toolbar {
-  position: relative;
-  padding: 0px 40px;
+header {
+  width: 100%;
+  max-width: $content_max_width;
 }
 
-.app_container {
-  height: 100%;
+.content_outer {
+  width: 100%;
+  padding: 30px 16px;
 }
 
+.content_inner {
+  width: 100%;
+  max-width: $content_max_width;
+}
+
+// Example of menu button with checkbox behaviour
 .menu_checkbox {
   position: relative;
   label {
@@ -26,46 +33,4 @@ $content_max_width: 1440px;
   input[type="checkbox"] {
     visibility: hidden;
   }
-}
-
-.hover_accent {
-  &:hover {
-    color: mat.get-color-from-palette(lean-theme.$learn-lean-accent, A100);
-  }
-}
-
-.home_link {
-  height: 100%;
-  padding: 0px 20px;
-}
-
-.sidenav_container {
-  height: 100%;
-}
-
-mat-sidenav {
-  width: 400px;
-  padding-bottom: 20px;
-}
-
-header {
-  width: 100%;
-  max-width: $content_max_width;
-}
-
-.content_container {
-  padding: 50px 0px;
-  width: 100%;
-  max-width: $content_max_width;
-  margin: 0 auto;
-
-  @media screen and (max-width: 959px) {
-    padding: 30px;
-  }
-}
-
-.logout_icon {
-  // padding: 10px 15px;
-  height: 100%;
-  cursor: pointer;
 }

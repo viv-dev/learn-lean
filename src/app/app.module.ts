@@ -35,29 +35,35 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { environment } from '../environments/environment';
 import { AppShellComponent } from './app-shell/app-shell.component';
-import { LoginComponent } from './login/login.component';
-import { HomeComponent } from './pages/home/home.component';
+import { LoginPageComponent } from './pages/login-page/login-page.component';
+import { HomePageComponent } from './pages/home-page/home-page.component';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NotFoundComponent } from './pages/not-found/not-found.component';
+import { NotFoundPageComponent } from './pages/not-found-page/not-found-page.component';
 import { HttpClientModule } from '@angular/common/http';
-import { NewPipelineScenarioComponent } from './modals/new-pipeline-scenario/new-pipeline-scenario.component';
-import { MatResponsiveTableDirective } from './directives/mat-responsive-table.directive';
+import { NewPipelineScenarioComponent } from './shared/modals/new-pipeline-scenario/new-pipeline-scenario.component';
+import { MatResponsiveTableDirective } from './shared/directives/mat-responsive-table.directive';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
-import { PipelineScenarioTypeMapPipe } from './pipes/pipeline-scenario-type-map.pipe';
-import { PipelineScenarioStateMapPipe } from './pipes/pipeline-scenario-state-map.pipe';
+import { PipelineScenarioTypeMapPipe } from './shared/pipes/pipeline-scenario-type-map.pipe';
+import { PipelineScenarioStateMapPipe } from './shared/pipes/pipeline-scenario-state-map.pipe';
+import { PipelineScenarioListComponent } from './shared/components/pipeline-scenario-list/pipeline-scenario-list.component';
+import { PipelineScenarioLeaderboardComponent } from './shared/components/pipeline-scenario-leaderboard/pipeline-scenario-leaderboard.component';
+import { PipelineScenarioPageComponent } from './pages/pipeline-scenario-page/pipeline-scenario-page.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     AppShellComponent,
-    LoginComponent,
-    HomeComponent,
-    NotFoundComponent,
+    LoginPageComponent,
+    HomePageComponent,
+    NotFoundPageComponent,
     NewPipelineScenarioComponent,
     MatResponsiveTableDirective,
     PipelineScenarioTypeMapPipe,
     PipelineScenarioStateMapPipe,
+    PipelineScenarioListComponent,
+    PipelineScenarioLeaderboardComponent,
+    PipelineScenarioPageComponent,
   ],
   imports: [
     BrowserModule,
