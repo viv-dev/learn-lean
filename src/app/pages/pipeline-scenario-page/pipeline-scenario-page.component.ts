@@ -3,6 +3,7 @@ import {
   Component,
   ElementRef,
   HostListener,
+  OnDestroy,
   OnInit,
   ViewChild,
 } from '@angular/core';
@@ -47,7 +48,9 @@ const JITTER_RANGE = Math.floor(TOKEN_GAP / 2);
   templateUrl: './pipeline-scenario-page.component.html',
   styleUrls: ['./pipeline-scenario-page.component.scss'],
 })
-export class PipelineScenarioPageComponent implements OnInit, AfterViewInit {
+export class PipelineScenarioPageComponent
+  implements OnInit, AfterViewInit, OnDestroy
+{
   @ViewChild('pipelineCanvas')
   private canvasRef?: ElementRef<HTMLCanvasElement>;
 
@@ -87,6 +90,11 @@ export class PipelineScenarioPageComponent implements OnInit, AfterViewInit {
     this.ctx = this.canvas.getContext('2d');
     this.recalculate();
     this.draw();
+  }
+
+  ngOnDestroy(): void {
+    if (!this.canvas) return;
+    clearCanvas(this.canvas);
   }
 
   initTokens() {
