@@ -44,7 +44,10 @@ export class HomePageComponent implements OnInit {
       .pipe(take(1))
       .toPromise()
       .then((data) => {
+        console.log('Handling submit');
+        console.log(data);
         if (data.type === 'submit' && data.data && data.data.scenarioId) {
+          console.log('navigating');
           this.router.navigateByUrl(`/app/pipeline/${data.data.scenarioId}`);
         }
 
@@ -53,6 +56,6 @@ export class HomePageComponent implements OnInit {
   }
 
   deleteScenario(scenario: PipelineScenarioInstance) {
-    console.log(`Deleting ${scenario.name}`);
+    this.pipelineScenarioService.deleteOne(scenario);
   }
 }

@@ -5,6 +5,7 @@ import {
   scenarioMap,
 } from 'src/app/core/models/scenarios.model';
 import { ModalOverlayRef } from 'src/app/core/services/modal.ref';
+import { PipelineScenarioService } from 'src/app/core/services/pipeline-scenario.service';
 
 @Component({
   selector: 'll-create-pipeline-scenario-modal',
@@ -23,13 +24,24 @@ export class CreatePipelineScenarioModalComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private ngZone: NgZone,
+    private pipelineScenario: PipelineScenarioService,
     private modalRef: ModalOverlayRef
   ) {}
 
   ngOnInit(): void {}
 
-  create() {}
+  async create() {
+    if (this.form.valid) {
+      this.creating = true;
+      const scenarioId = await this.pipelineScenario.createScenario(
+        this.scenarioName?.value,
+        this.scenarioType?.value
+      );
+      this.creating = false;
+
+      this.modalRef.close({ scenarioId }, 'submit');
+    }
+  }
 
   get scenarioName() {
     return this.form.get('scenarioName');

@@ -1,3 +1,5 @@
+import { Timestamp } from '@firebase/firestore';
+
 export enum PipelineScenarioTypeEnum {
   RANDOM,
   ORDERED,
@@ -15,9 +17,9 @@ export enum PlayerTypeEnum {
 export const scenarioMap = new Map<PipelineScenarioTypeEnum, string>([
   [PipelineScenarioTypeEnum.RANDOM, '1 - Random'],
   [PipelineScenarioTypeEnum.ORDERED, '2 - Ordered'],
-  [PipelineScenarioTypeEnum.BATCHED, '3 - Batched Ordered'],
-  [PipelineScenarioTypeEnum.BATCH_RELEASED, '4 - Limited Batched'],
-  [PipelineScenarioTypeEnum.PRIORITISED, '5 - Batched Weaved Ordered'],
+  [PipelineScenarioTypeEnum.BATCHED, '3 - Strict Batched'],
+  [PipelineScenarioTypeEnum.BATCH_RELEASED, '4 - Release Batched'],
+  [PipelineScenarioTypeEnum.PRIORITISED, '5 - Prioritised'],
 ]);
 
 export const pipelineScenarioTypeLookup = (
@@ -61,31 +63,33 @@ export interface PipeLineScenario {
 }
 
 export interface PipelineScenarioInstance {
-  id: string;
+  id?: string;
   name: string;
   type: PipelineScenarioTypeEnum;
   state: PipelineScenarioStateEnum;
+  batched: boolean;
+  batchSize: number;
+  released: boolean;
+  releaseSize: number;
 
   owner_id: string;
 
   player1_id: string;
-  player2_id: string;
-  player3_id: string;
-
   player1_tokens: string[];
   player1_next: string[];
+  player1_completed?: Timestamp;
 
+  player2_id: string;
   player2_tokens: string[];
   player2_next: string[];
-  player2_batched: boolean;
-  player2_batch_size: number | null;
+  player2_completed?: Timestamp;
 
+  player3_id: string;
   player3_tokens: string[];
   player3_next: string[];
-  player3_batched: boolean;
-  player3_batch_size: number | null;
+  player3_completed?: Timestamp;
 
   totalTime: number;
   completed: boolean;
-  created: any;
+  dateCreated?: any;
 }

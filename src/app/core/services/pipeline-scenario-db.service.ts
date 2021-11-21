@@ -21,6 +21,7 @@ import {
   setDoc,
   deleteDoc,
 } from '@angular/fire/firestore';
+import { addDoc } from '@firebase/firestore';
 import { Observable } from 'rxjs';
 import { SCENARIOS_COLLECTION } from '../models/firebase-collections.model';
 import { PipelineScenarioInstance } from '../models/scenarios.model';
@@ -40,7 +41,7 @@ export class PipelineScenarioDbService {
     // Specify order to get data
     const collectionQuery = query(
       pipelineCollection,
-      orderBy('created', 'asc')
+      orderBy('dateCreated', 'asc')
     );
 
     // Get the collection according to the query
@@ -49,16 +50,13 @@ export class PipelineScenarioDbService {
     });
   }
 
-  createOne(scenario: PipelineScenarioInstance): Promise<void> {
+  createOne(scenario: PipelineScenarioInstance): Promise<string> {
     const timestamp = serverTimestamp();
-    scenario.created = timestamp;
+    scenario.dateCreated = timestamp;
 
-    const docRef = doc(
-      this.afs,
-      SCENARIOS_COLLECTION
-    ) as DocumentReference<PipelineScenarioInstance>;
-
-    return setDoc(docRef, scenario);
+    return addDoc(collection(this.afs, SCENARIOS_COLLECTION), scenario).then(
+      (ref) => ref.id
+    );
   }
 
   getOne(id: string): Observable<PipelineScenarioInstance> {

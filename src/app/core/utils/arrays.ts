@@ -7,4 +7,6 @@ export function shuffle(array: any[]) {
     const j = Math.floor(Math.random() * (max + 1));
     [array[max], array[j]] = [array[j], array[max]];
   }
+
+  return array;
 }
