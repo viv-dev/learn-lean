@@ -25,3 +25,12 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
+## TODO:
+
+For the scenario:
+
+- [ ] create datamodel for scenario
+- [ ] create multi-user session
+- [ ] manage difference between 'player' and 'observer'
+- [ ] create logic for different scenario types (1-5)

@@ -49,6 +49,7 @@ import { PipelineScenarioStateMapPipe } from './shared/pipes/pipeline-scenario-s
 import { PipelineScenarioListComponent } from './shared/components/pipeline-scenario-list/pipeline-scenario-list.component';
 import { PipelineScenarioLeaderboardComponent } from './shared/components/pipeline-scenario-leaderboard/pipeline-scenario-leaderboard.component';
 import { PipelineScenarioPageComponent } from './pages/pipeline-scenario-page/pipeline-scenario-page.component';
+import { PipelineScenarioComponent } from './pages/pipeline-scenario-page/pipeline-scenario/pipeline-scenario.component';
 
 @NgModule({
   declarations: [
@@ -64,6 +65,7 @@ import { PipelineScenarioPageComponent } from './pages/pipeline-scenario-page/pi
     PipelineScenarioListComponent,
     PipelineScenarioLeaderboardComponent,
     PipelineScenarioPageComponent,
+    PipelineScenarioComponent,
   ],
   imports: [
     BrowserModule,

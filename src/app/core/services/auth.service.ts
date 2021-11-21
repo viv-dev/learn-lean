@@ -25,6 +25,11 @@ export class AuthService implements OnDestroy {
   private _isAuthInitialised = false;
   private isAuthInitialised$ = new BehaviorSubject<boolean>(false);
 
+  /**
+   * Creates an instance of auth service.
+   * @param fireAuth
+   * @param router
+   */
   constructor(private fireAuth: Auth, private router: Router) {
     this.user$ = new BehaviorSubject<User | null>(this.fireAuth.currentUser);
     this.authStatus$ = new BehaviorSubject<boolean>(false);
@@ -39,6 +44,9 @@ export class AuthService implements OnDestroy {
     });
   }
 
+  /**
+   * on destroy
+   */
   ngOnDestroy() {
     this.user$.complete();
     this.authStatus$.complete();
