@@ -3,6 +3,7 @@ import {
   Component,
   ElementRef,
   HostListener,
+  Input,
   OnDestroy,
   OnInit,
   ViewChild,
@@ -55,6 +56,16 @@ const JITTER_RANGE = Math.floor(TOKEN_GAP / 2);
 export class PipelineScenarioComponent
   implements OnInit, AfterViewInit, OnDestroy
 {
+  @Input()
+  set isActive(active: boolean) {
+    if (active) {
+      this.recalculate();
+      this.draw();
+    } else {
+      if (this.canvas) clearCanvas(this.canvas);
+    }
+  }
+
   /**
    * View child of pipeline scenario component
    */
@@ -150,8 +161,7 @@ export class PipelineScenarioComponent
    * on destroy
    */
   ngOnDestroy(): void {
-    if (!this.canvas) return;
-    clearCanvas(this.canvas);
+    if (this.canvas) clearCanvas(this.canvas);
   }
 
   /**

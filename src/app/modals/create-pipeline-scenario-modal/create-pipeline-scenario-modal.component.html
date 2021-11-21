@@ -1,0 +1,48 @@
+<mat-card class="modal" fxLayout="column" fxLayoutGap="30px">
+  <mat-card-title>Create Pipeline Scenario</mat-card-title>
+  <mat-card-content fxLayout="column" fxLayoutGap="20px">
+    <form
+      [formGroup]="form"
+      (ngSubmit)="create()"
+      fxLayout="column"
+      fxLayoutGap="30px"
+    >
+      <mat-form-field>
+        <mat-label>Scenario Name</mat-label>
+        <input
+          #listName
+          type="text"
+          matInput
+          placeholder="Scenario Name"
+          formControlName="scenarioName"
+          autofocus
+        />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Scenario Type</mat-label>
+        <mat-select formControlName="scenarioType" name="scenarioType">
+          <mat-option
+            *ngFor="let type of scenarioMap | keyvalue"
+            [value]="type.key"
+          >
+            {{ type.value }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div class="button" fxLayout="row" fxLayoutAlign="end">
+        <button
+          mat-raised-button
+          color="accent"
+          type="submit"
+          [disabled]="form.invalid"
+        >
+          Create
+        </button>
+      </div>
+    </form>
+
+    <mat-progress-bar *ngIf="creating" mode="query"></mat-progress-bar>
+  </mat-card-content>
+</mat-card>

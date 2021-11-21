@@ -40,7 +40,7 @@ export class ModalOverlayRef {
   }
 
   // Private function that executes additional close logic
-  private _close(type, data?) {
+  private _close(type: any, data?: any) {
     // Close the overlay
     this.overlayRef.dispose();
 

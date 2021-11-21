@@ -1,48 +1,97 @@
 import { Injectable } from '@angular/core';
+import { type } from 'os';
+import { PipelineScenarioTypeEnum } from '../models/scenarios.model';
+import { PipelineScenarioDbService } from './pipeline-scenario-db.service';
 
-import {
-  collection,
-  doc,
-  docData,
-  DocumentReference,
-  CollectionReference,
-  Firestore,
-  onSnapshot,
-  query,
-  where,
-  Unsubscribe,
-  Query,
-  DocumentData,
-  collectionData,
-  collectionChanges,
-  docSnapshots,
-  orderBy,
-  serverTimestamp,
-} from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
-import { SCENARIOS_COLLECTION } from '../models/firebase-collections.model';
-import { PipelineScenarioInstance } from '../models/scenarios.model';
 @Injectable({
   providedIn: 'root',
 })
 export class PipelineScenarioService {
-  constructor(private afs: Firestore) {}
+  private creationMap = new Map<PipelineScenarioTypeEnum, () => void>([
+    [PipelineScenarioTypeEnum.RANDOM, this.createRandomScenario],
+    [PipelineScenarioTypeEnum.ORDERED, this.createOrderedScenario],
+    [PipelineScenarioTypeEnum.BATCHED, this.createBatchedScenario],
+    [PipelineScenarioTypeEnum.BATCH_RELEASED, this.createBatchReleasedScenario],
+    [PipelineScenarioTypeEnum.PRIORITISED, this.createPrioritisedScenario],
+  ]);
 
-  getAll(): Observable<PipelineScenarioInstance[]> {
-    // Describe the collection
-    const pipelineCollection = collection(
-      this.afs,
-      SCENARIOS_COLLECTION
-    ) as CollectionReference<PipelineScenarioInstance>;
+  constructor(private pipelineDBService: PipelineScenarioDbService) {}
 
-    // Specify order to get data
-    const q = query(pipelineCollection, orderBy('created', 'asc'));
+  /*
+  General rules 
+  - only player 1 tokens light up
+  - player 2 has to do some additional time consuming task
+  - player 3 just has to shove tokens into the slot asap
 
-    // Get the collection according to the query
-    return collectionData<PipelineScenarioInstance>(q, { idField: 'id' });
+  */
+  createScenario(scenarioType: PipelineScenarioTypeEnum) {
+    if (this.creationMap.has(scenarioType)) {
+      this.creationMap.get(scenarioType)!();
+    }
   }
 
-  createOne(scenario: Partial<PipelineScenarioInstance>): void {
-    const timestamp = serverTimestamp();
+  createRandomScenario() {
+    /*
+    Player 1 tokens light up in random order, put into slot as quickly as possible.
+    Player 2 has to put tokens in order A, 1, B, 2, C, 3, etc
+    Player 3 has to put tokens in order A, 1, B, 2, C, 3, etc
+    */
+
+    console.log('Would create random scenario (Type 1)');
+  }
+
+  createOrderedScenario() {
+    /*
+      Player 1 tokens light up in order A, 1, B, 2, C, 3 etc.
+      Player 2 has to put tokens in order A, 1, B, 2, C, 3 etc.
+      Player 3 has to put tokens in order A, 1, B, 2, C, 3 etc.
+    */
+
+    console.log('Would create ordered scenario (Type 2)');
+  }
+
+  createBatchedScenario() {
+    /*
+      Player 1 tokens light up in order A, 1, B, 2, C, 3 etc.
+      Player 1 can initially only put tokens up to specified batch number (e.g. 8)
+
+      Player 2 has to put tokens in order A, 1, B, 2, C, 3 etc
+      Player 2 recieves tokens in batches from player 1 (e.g. 8)
+
+      Player 3 has to put tokens in order A, 1, B, 2, C, 3 etc
+      Player 3 recieves tokens in batches from player 2 (e.g. 8)
+
+    */
+
+    console.log('Would create batched scenario (Type 3)');
+  }
+
+  createBatchReleasedScenario() {
+    /*
+      Player 1 tokens light up in order A, 1, B, 2, C, 3 etc.
+      Player 1 can initially only put tokens up to specified batch number (e.g. 8)
+      Player 1 can only continue putting in tokens when player 2's remaining tokens
+      is less than some number (e.g. 2)
+
+      Player 2 has to put tokens in order A, 1, B, 2, C, 3 etc
+      Player 2 recieves tokens in batches from player 1 (e.g. 8)
+
+      Player 3 has to put tokens in order A, 1, B, 2, C, 3 etc
+      Player 3 recieves tokens in batches from player 2 (e.g. 8)
+
+    */
+
+    console.log('Would create batch with release scenario (Type 4)');
+  }
+
+  createPrioritisedScenario() {
+    /*
+      Players have to put tokens in the order:
+      A,B,C,D...J,1,2,3,4....10,K,L,M,N....T,11,12,13,14....20
+
+      Follows batch released scenario rules otherwise.
+    */
+
+    console.log('Would create batch, released, prioritised scenario (Type 5)');
   }
 }

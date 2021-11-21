@@ -2,7 +2,7 @@
   <div fxLayout="row" fxLayoutAlign="center center">
     <h1>Scenarios</h1>
     <div fxFlex="1 1 auto"></div>
-    <button mat-icon-button>
+    <button *isAdmin mat-icon-button (click)="openCreateModal()">
       <mat-icon>add</mat-icon>
     </button>
   </div>
@@ -73,6 +73,15 @@
             >
               Join
             </a>
+
+            <button
+              *isAdmin
+              mat-stroked-button
+              color="warn"
+              (click)="deleteScenario(element)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
           </div>
         </td>
       </ng-container>

@@ -6,6 +6,8 @@ import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { HomePageComponent } from './pages/home-page/home-page.component';
 import { NotFoundPageComponent } from './pages/not-found-page/not-found-page.component';
 import { PipelineScenarioPageComponent } from './pages/pipeline-scenario-page/pipeline-scenario-page.component';
+import { StatsPageComponent } from './pages/stats-page/stats-page.component';
+import { LeaderBoardPageComponent } from './pages/leader-board-page/leader-board-page.component';
 
 const routes: Routes = [
   {
@@ -30,6 +32,14 @@ const routes: Routes = [
       {
         path: 'pipeline/:id',
         component: PipelineScenarioPageComponent,
+      },
+      {
+        path: 'stats/:id',
+        component: StatsPageComponent,
+      },
+      {
+        path: 'leaderboard',
+        component: LeaderBoardPageComponent,
       },
     ],
   },

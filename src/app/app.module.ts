@@ -26,6 +26,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
 
 // Font Awesome
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -50,6 +51,11 @@ import { PipelineScenarioListComponent } from './shared/components/pipeline-scen
 import { PipelineScenarioLeaderboardComponent } from './shared/components/pipeline-scenario-leaderboard/pipeline-scenario-leaderboard.component';
 import { PipelineScenarioPageComponent } from './pages/pipeline-scenario-page/pipeline-scenario-page.component';
 import { PipelineScenarioComponent } from './pages/pipeline-scenario-page/pipeline-scenario/pipeline-scenario.component';
+import { PipelineStatusBarComponent } from './pages/pipeline-scenario-page/pipeline-status-bar/pipeline-status-bar.component';
+import { StatsPageComponent } from './pages/stats-page/stats-page.component';
+import { LeaderBoardPageComponent } from './pages/leader-board-page/leader-board-page.component';
+import { CreatePipelineScenarioModalComponent } from './modals/create-pipeline-scenario-modal/create-pipeline-scenario-modal.component';
+import { IsAdminDirective } from './shared/directives/is-admin.directive';
 
 @NgModule({
   declarations: [
@@ -66,6 +72,11 @@ import { PipelineScenarioComponent } from './pages/pipeline-scenario-page/pipeli
     PipelineScenarioLeaderboardComponent,
     PipelineScenarioPageComponent,
     PipelineScenarioComponent,
+    PipelineStatusBarComponent,
+    StatsPageComponent,
+    LeaderBoardPageComponent,
+    CreatePipelineScenarioModalComponent,
+    IsAdminDirective,
   ],
   imports: [
     BrowserModule,
@@ -90,6 +101,7 @@ import { PipelineScenarioComponent } from './pages/pipeline-scenario-page/pipeli
     MatProgressSpinnerModule,
     MatTableModule,
     MatDividerModule,
+    MatSelectModule,
     MatIconModule,
     FlexLayoutModule,
     FontAwesomeModule,
